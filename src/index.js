@@ -1,7 +1,7 @@
 import './pages/index.css';
 import { initialCards } from '../src/scripts/cards.js'
 import {creationCard, deleteCard} from '../src/components/card.js'
-import {openPopup, closePopup, closePopupCLickEsc, closeOverlayPopup} from '../src/components/modal.js'
+import {openPopup, closePopup} from '../src/components/modal.js'
 
 const cardContainer = document.querySelector('.places__list')
 const profileEditButton = document.querySelector('.profile__edit-button')
@@ -20,16 +20,14 @@ const profileDescription = document.querySelector('.profile__description')
 const newCardForm = document.querySelector('form[name="new-place"]')
 const newInputName = newCardForm.querySelector('.popup__input_type_card-name')
 const newInputLink = newCardForm.querySelector('.popup__input_type_url')
+const popups = document.querySelectorAll('.popup')
 
-window.onload = () => render()
 
-function render() {
-    cardContainer.innerHTML = ''
-    for(let i = 0; i < initialCards.length; i++){
-        const addCard = creationCard(initialCards[i], deleteCard);
-        cardContainer.prepend(addCard)
-    }
+for(let i = 0; i < initialCards.length; i++){
+    const addCard = creationCard(initialCards[i], deleteCard, openImagePopup);
+    cardContainer.prepend(addCard)
 }
+
 
 popupCloseButton.forEach(function(button) {
     button.addEventListener('click', () => {
@@ -46,19 +44,21 @@ profileAddButton.addEventListener('click', function() {
     openPopup(popupTypeNewCard)
 })
 
-export function openImagePopup(cardLink, cardName) {
-    popupImage.src = cardLink
-    popupImage.alt = cardName
-    popupCaption.textContent = cardName
-    openPopup(popupTypeImage)
+
+function closeOverlayPopup() {
+    popups.forEach((popup) => {
+       popup.addEventListener('click', (evt) => {
+           if(evt.target.classList.contains('popup')) {
+             closePopup(popup)
+           }
+       })
+    })
 }
 
 closeOverlayPopup()
 
 function editFormSubmit(evt) {
     evt.preventDefault(); 
-
-    editInputDescr.value
 
     profileTitle.textContent = editInputName.value
     profileDescription.textContent = editInputDescr.value
@@ -75,8 +75,8 @@ function addNewCard(evt) {
         link: newInputLink.value
     }
 
-    initialCards.push(newCard)
-    render()
+    const card = creationCard(newCard, deleteCard)
+    cardContainer.prepend(card)
 
     newCardForm.reset()
     closePopup(popupTypeNewCard)
@@ -84,30 +84,18 @@ function addNewCard(evt) {
 
 newCardForm.addEventListener('submit', addNewCard)
 
+function openImagePopup(cardLink, cardName) {
+    popupImage.src = cardLink
+    popupImage.alt = cardName
+    popupCaption.textContent = cardName
 
+    openPopup(popupTypeImage)
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+document.addEventListener('DOMContentLoaded', () => {
+    popups.forEach(popup => {
+        if (!popup.classList.contains('popup_is-animated')) {
+            popup.classList.add('popup_is-animated');
+        }
+    });
+});

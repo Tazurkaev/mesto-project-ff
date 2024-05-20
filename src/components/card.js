@@ -1,7 +1,4 @@
-import {openImagePopup} from "../index.js"
-
-
-export function creationCard(card, deleteCard) {
+export function creationCard(card, deleteCard, openImagePopup) {
     console.log(deleteCard)
     const cardTemplate = document.querySelector('#card-template').content
     const cardTemplateClone = cardTemplate.querySelector('.places__item').cloneNode(true)
@@ -34,3 +31,4 @@ export function deleteCard(card){
 function likeCard(evt) {
     evt.target.classList.toggle('card__like-button_is-active')
 }
+
