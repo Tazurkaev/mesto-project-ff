@@ -1,34 +1,70 @@
-export function creationCard(card, deleteCard, openImagePopup) {
-    console.log(deleteCard)
+import { cardDelete, cardLike, unlikeCard } from "./api"
+
+export function createCard(card, imagePopup, userId) {
     const cardTemplate = document.querySelector('#card-template').content
-    const cardTemplateClone = cardTemplate.querySelector('.places__item').cloneNode(true)
-    const cardImage = cardTemplateClone.querySelector('.card__image')
+    const placesItem = cardTemplate.querySelector('.places__item').cloneNode(true)
+    const cardImage = placesItem.querySelector('.card__image')
+    const cardTitle = placesItem.querySelector('.card__title')
+    const cardDeleteButton = placesItem.querySelector('.card__delete-button')
+    const cardLikeButton = placesItem.querySelector('.card__like-button')
+    const likeCounter = placesItem.querySelector('.card__like-counter')
 
-    cardImage.addEventListener('click', function() {
-        openImagePopup(card.link, card.name)
+    console.log(card)
+
+    cardLikeButton.addEventListener('click', (event) =>  likeCard(event, card._id, likeCounter))
+    likeCounter.textContent = card.likes.length
+
+
+    cardImage.addEventListener('click', () => {
+        imagePopup(card.link, card.name)
+    })    
+
+    
+    cardDeleteButton.addEventListener('click', () => {
+        deleteCard(placesItem, card._id)
     })
 
-    cardImage.src = card.link
-    cardImage.alt = card.name
+    cardImage.src = card.link 
+    cardTitle.textContent = card.name
 
-    cardTemplateClone.querySelector('.card__title').textContent = card.name;
-    const deleteButton = cardTemplateClone.querySelector('.card__delete-button')
-    deleteButton.addEventListener('click', function() {
-       deleteCard(cardTemplateClone)
+    if(card.owner._id === userId) {
+        cardDeleteButton.classList.remove('card__delete-button-hidden')
+    } else {
+        cardDeleteButton.classList.add('card__delete-button-hidden')
+    }
+
+    if(card.likes.some(like => like._id === userId)) {
+        cardLikeButton.classList.add('card__like-button_is-active')
+    }
+
+    return placesItem
+
+ }
+
+export function deleteCard(card, cardId) {
+
+    cardDelete(cardId)
+    .then(() => {
+        card.remove()
     })
 
-    const cardLikeButton = cardTemplateClone.querySelector('.card__like-button')
-    cardLikeButton.addEventListener('click', likeCard)
 
-    return cardTemplateClone
 }
 
-export function deleteCard(card){
-    card.remove()
+export function likeCard(event, cardId, likeCounter) {
+    const likeButton = event.target
+
+    if(likeButton.classList.contains('card__like-button_is-active')) {
+        unlikeCard(cardId)
+        .then((likeData) => {
+            likeButton.classList.remove('card__like-button_is-active')
+            likeCounter.textContent = likeData.likes.length
+        })
+    }else { 
+        cardLike(cardId)
+        .then((likeData) => {
+            likeButton.classList.add('card__like-button_is-active')
+            likeCounter.textContent = likeData.likes.length
+        })
+    }
 }
-
-
-function likeCard(evt) {
-    evt.target.classList.toggle('card__like-button_is-active')
-}
-
