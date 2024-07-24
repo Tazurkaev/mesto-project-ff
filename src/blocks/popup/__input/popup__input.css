@@ -29,8 +29,3 @@
   color: red;
   font-size: 12px;
 }
-
-.popup__button_disabled {
-  background-color: grey; /* Замените на нужный цвет */
-  cursor: not-allowed;
-}

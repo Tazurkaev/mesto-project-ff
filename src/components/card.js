@@ -1,6 +1,6 @@
-import { cardDelete, cardLike, unlikeCard } from "./api"
+import { deleteCardOnServer, addCardLike, unlikeCard } from "./api"
 
-export function createCard(card, imagePopup, userId) {
+export function createCard(card, openImagePopup, userId) {
     const cardTemplate = document.querySelector('#card-template').content
     const placesItem = cardTemplate.querySelector('.places__item').cloneNode(true)
     const cardImage = placesItem.querySelector('.card__image')
@@ -9,14 +9,13 @@ export function createCard(card, imagePopup, userId) {
     const cardLikeButton = placesItem.querySelector('.card__like-button')
     const likeCounter = placesItem.querySelector('.card__like-counter')
 
-    console.log(card)
 
     cardLikeButton.addEventListener('click', (event) =>  likeCard(event, card._id, likeCounter))
     likeCounter.textContent = card.likes.length
 
 
     cardImage.addEventListener('click', () => {
-        imagePopup(card.link, card.name)
+        openImagePopup(card.link, card.name)
     })    
 
     
@@ -41,14 +40,16 @@ export function createCard(card, imagePopup, userId) {
 
  }
 
+
 export function deleteCard(card, cardId) {
-
-    cardDelete(cardId)
-    .then(() => {
-        card.remove()
-    })
-
-
+    deleteCardOnServer(cardId)
+        .then(() => {
+            card.remove();
+        })
+        .catch((err) => {
+            console.error(`Ошибка при удалении карточки: ${err}`);
+            alert('Произошла ошибка при удалении карточки. Пожалуйста, попробуйте снова.');
+        });
 }
 
 export function likeCard(event, cardId, likeCounter) {
@@ -60,11 +61,19 @@ export function likeCard(event, cardId, likeCounter) {
             likeButton.classList.remove('card__like-button_is-active')
             likeCounter.textContent = likeData.likes.length
         })
+        .catch((err) => {
+            console.error(`Ошибка при удалении лайка: ${err}`);
+            alert('Произошла ошибка при удалении лайка. Пожалуйста, попробуйте снова.');
+        });
     }else { 
-        cardLike(cardId)
+        addCardLike(cardId)
         .then((likeData) => {
             likeButton.classList.add('card__like-button_is-active')
             likeCounter.textContent = likeData.likes.length
         })
+        .catch((err) => {
+            console.error(`Ошибка при добавлении лайка: ${err}`);
+            alert('Произошла ошибка при добавлении лайка. Пожалуйста, попробуйте снова.');
+        });
     }
 }

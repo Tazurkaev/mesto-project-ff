@@ -50,7 +50,7 @@ export function updateProfile(name, about) {
   })
 }
 
-export function newCard(name, link) {
+export function createNewCard(name, link) {
   return fetch(`${config.url}/cards`, {
     method: 'POST',
     headers: config.headers,
@@ -64,7 +64,7 @@ export function newCard(name, link) {
   })
 }
 
-export function cardDelete(cardId) {
+export function deleteCardOnServer(cardId) {
   return fetch(`${config.url}/cards/${cardId}`, {
     method: 'DELETE',
     headers: config.headers
@@ -91,7 +91,7 @@ export function updateAvatar(avatar) {
   })
 }
 
-export function cardLike(cardId) {
+export function addCardLike(cardId) {
   return fetch(`${config.url}/cards/likes/${cardId}`, {
     method: 'PUT',
     headers: config.headers,

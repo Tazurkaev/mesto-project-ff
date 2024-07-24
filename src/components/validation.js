@@ -6,9 +6,9 @@ const validationConfig = {
     inactiveButtonClass: 'popup__button_disabled',
     inputErrorClass: 'popup__input_type_error',
     errorClass: 'popup__error_visible',
-    namePattern: /^[A-Za-zА-Яа-яЁё0-9 -]+$/, // Исправлено регулярное выражение
-    placeNamePattern: /^[A-Za-zА-Яа-яЁё0-9 -]{2,30}$/, // Регулярное выражение для названия
-    descriptionPattern: /^[A-Za-zА-Яа-яЁё0-9 -]{2,200}$/ // Регулярное выражение для описания
+    namePattern: /^[A-Za-zА-Яа-яЁё0-9 -]+$/,
+    placeNamePattern: /^[A-Za-zА-Яа-яЁё0-9 -]{2,30}$/,
+    descriptionPattern: /^[A-Za-zА-Яа-яЁё0-9 -]{2,200}$/
 };
 
 // Функция проверки валидности поля
